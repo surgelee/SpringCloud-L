@@ -40,8 +40,7 @@ public class PaymentController {
     @PostMapping("create")
     public CommonResult<Payment> create(@RequestBody Payment payment) {
         Payment insert = this.paymentService.insert(payment);
-        System.out.println(insert);
-        System.out.println("1234567890");
+        System.out.println("插入结果：" + insert);
         return new CommonResult<>(200, "insert success， serverPort：" + serverPort, insert);
     }
 
