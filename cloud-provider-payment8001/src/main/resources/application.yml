@@ -12,6 +12,14 @@ spring:
     username: root
     password: 123456
 
+eureka:
+  client:
+    service-url:
+      register-with-eureka: true #是否向注册中心注册自己
+      fetchRegistry: true #是否从注册中心抓取已有的注册信息 默认true，集群必须设置为true
+      # 设置与eureka server交互的地址查询服务和注册服务都需要依赖这个地址
+      defaultZone: http://localhost:7001/eureka/ #单机版
+
 mybatis:
   mapperLocations: classpath:mapper/*.xml
   type-aliases-package: com.surge.springcloud.entities

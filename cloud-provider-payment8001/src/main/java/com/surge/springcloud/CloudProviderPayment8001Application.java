@@ -2,6 +2,7 @@ package com.surge.springcloud;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 /**
 * @author : Surge Lee
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 * @modyified By: 
 */
 @SpringBootApplication
+@EnableEurekaClient
 public class CloudProviderPayment8001Application {
 
     public static void main(String[] args) {
