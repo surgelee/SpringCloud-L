@@ -3,7 +3,10 @@ package com.surge.springcloud.controller;
 import com.surge.springcloud.entities.CommonResult;
 import com.surge.springcloud.entities.Payment;
 import com.surge.springcloud.service.PaymentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("payment")
+@Slf4j
 public class PaymentController {
     /**
      * 服务对象
@@ -23,6 +27,9 @@ public class PaymentController {
 
     @Value("${server.port}")
     private String serverPort;
+
+    @Resource
+    private DiscoveryClient discoveryClient;
 
     /**
      * 通过主键查询单条数据
@@ -50,6 +57,25 @@ public class PaymentController {
         List<Payment> payment = this.paymentService.queryAllByLimit(offset, limit);
 
         return new CommonResult<>(200, "select success， serverPort：" + serverPort, payment);
+    }
+
+
+    /**
+     * 可以获取微服务名称的实例相关信息
+     *
+     * http://localhost:8002/payment/discovery
+     */
+    @GetMapping(value = "/discovery")
+    public Object discovery(){
+        List<String> services = discoveryClient.getServices();
+        for (String element : services) {
+            log.info("***** element:"+element);
+        }
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        for (ServiceInstance instance : instances) {
+            log.info(instance.getServiceId()+"\t"+instance.getHost()+"\t"+instance.getPort()+"\t"+instance.getUri());
+        }
+        return this.discoveryClient;
     }
 
 }
