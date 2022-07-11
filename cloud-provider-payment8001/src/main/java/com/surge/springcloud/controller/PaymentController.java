@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * (Payment)表控制层
@@ -92,5 +93,16 @@ public class PaymentController {
     public String getPaymentLB(){
         return serverPort;
     }
+
+
+    /**
+     * Feign超时调用测试，默认1s 我们暂停3s，看超时效果
+     */
+    @GetMapping(value = "/feign/timeout")
+    public String paymentFeignTimeout(){
+        try { TimeUnit.SECONDS.sleep(3); }catch (Exception e) {e.printStackTrace();}
+        return serverPort;
+    }
+
 
 }
