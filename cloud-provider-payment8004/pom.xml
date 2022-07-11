@@ -14,7 +14,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.surge.springcloud</groupId>
+            <groupId>com.surge</groupId>
             <artifactId>cloud-api-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
