@@ -78,4 +78,15 @@ public class PaymentController {
         return this.discoveryClient;
     }
 
+
+    /**
+     * Ribbon负载均衡算法 测试
+     */
+    @GetMapping(value = "/lb")
+    public String getPaymentLB(){
+        return serverPort;
+    }
+
+
+
 }

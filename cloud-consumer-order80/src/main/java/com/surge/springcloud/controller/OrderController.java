@@ -2,17 +2,24 @@ package com.surge.springcloud.controller;
 
 import com.surge.springcloud.entities.CommonResult;
 import com.surge.springcloud.entities.Payment;
+import com.surge.springcloud.lb.MyLoadBalancer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.net.URI;
+import java.util.List;
 
 /**
  * 消费者
  */
 @RestController
 @RequestMapping("consumer")
+@Slf4j
 public class OrderController {
 
 //    public static final String PAYMENT_URL = "http://localhost:8001";
@@ -22,6 +29,12 @@ public class OrderController {
     @Resource
     private RestTemplate restTemplate;
 
+    // 注入自定义的负载均衡规则
+    @Resource
+    private MyLoadBalancer myLoadBalancer;
+
+    @Resource
+    private DiscoveryClient discoveryClient;
 
     @PostMapping("/payment/create")
     public CommonResult<Payment> create(@RequestBody Payment payment) {
@@ -49,6 +62,29 @@ public class OrderController {
         } else {
             return new CommonResult<>(444, "操作失败");
         }
+    }
+
+
+    /**
+     * @description 测试自定义的负载均衡规则
+     *
+     * 自定义 使用uri ip + port 访问，需要关闭 ApplicationContextConfig @LoadBalanced
+     */
+    @GetMapping(value = "/payment/lb")
+    public String getPaymentLB() {
+        log.info("请求 /payment/lb");
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+
+        if (instances == null || instances.isEmpty()) {
+            return null;
+        }
+
+        // 调用自定义的负载均衡策略
+        ServiceInstance serviceInstance = myLoadBalancer.instances(instances);
+        URI uri = serviceInstance.getUri();
+        System.out.println(uri);
+        return restTemplate.getForObject(uri.toString() + "/payment/lb", String.class);
+
     }
 
 }
