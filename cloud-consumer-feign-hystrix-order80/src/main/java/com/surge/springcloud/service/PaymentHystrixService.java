@@ -14,19 +14,14 @@ import java.util.concurrent.TimeUnit;
  * @description :
  * @modyified By:
  */
-@Service
-public class PaymentHystrixService {
+@Component
+@FeignClient(value = "CLOUD-PROVIDER-HYSTRIX-PAYMENT")
+public interface PaymentHystrixService {
 
-    //成功
-    public String paymentInfo_OK(Integer id){
-        return "线程池："+Thread.currentThread().getName()+"   paymentInfo_OK,id：  "+id+"\t"+"哈哈哈"  ;
-    }
+    @GetMapping("/payment/hystrix/ok/{id}")
+    String paymentInfo_OK(@PathVariable("id") Integer id);
 
-    //失败
-    public String paymentInfo_TimeOut(Integer id){
-        int timeNumber = 3;
-        try { TimeUnit.SECONDS.sleep(timeNumber); }catch (Exception e) {e.printStackTrace();}
-        return "线程池："+Thread.currentThread().getName()+"   paymentInfo_TimeOut,id：  "+id+"\t"+"呜呜呜"+" 耗时(秒)"+timeNumber;
-    }
+    @GetMapping("/payment/hystrix/timeout/{id}")
+    String paymentInfo_TimeOut(@PathVariable("id") Integer id);
 
 }

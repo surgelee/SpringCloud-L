@@ -29,13 +29,13 @@ public class PaymentService {
      * @return
      */
     @HystrixCommand(fallbackMethod = "paymentInfo_TimeOutHandler", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
     })
     public String paymentInfo_TimeOut(Integer id){ //超时与异常  都会服务降级
         // 2. 测试异常错误  服务容错处理
-        int age = 10/0;
+//        int age = 10/0;
         // 1。测试超时 服务容错处理
-        int timeNumber = 5;  // 大于3秒
+        int timeNumber = 3;
         try { TimeUnit.SECONDS.sleep(timeNumber); }catch (Exception e) {e.printStackTrace();}
         return "线程池："+Thread.currentThread().getName()+"   paymentInfo_TimeOut,id：  "+id+"\t"+"呜呜呜"+" 耗时(秒)"+timeNumber;
     }
