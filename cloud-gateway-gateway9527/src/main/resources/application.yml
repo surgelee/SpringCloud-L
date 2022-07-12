@@ -20,6 +20,13 @@ spring:
           uri: lb://cloud-payment-service
           predicates:
             - Path=/payment/lb/**   #断言,路径相匹配的进行路由
+            - After=2022-07-12T13:02:09.871+08:00[Asia/Shanghai]  # 断言 路由在配置时间后生效
+            - Cookie=username,zzyy  # Cookie=cookieName,正则表达式
+                                    # 测试方法 curl http://localhost:9527/payment/lb --cookie "username=zzyy"
+                                    # 乱发问题 https://blog.csdn.net/leedee/article/details/82685636
+            - Header=X-Request-Id, \d+  # 请求头要有X-Request-Id属性并且值为整数的正则表达式
+                                        # 测试 curl http://localhost:9527/payment/lb --cookie "username=zzyy" -H "X-Request-Id:11"
+            - Host=**.surge.com  # curl http://localhost:9527/payment/lb -H "Host:afae.surge.com"
 
 
 eureka:
