@@ -6,23 +6,43 @@ spring:
   cloud:
     config:
       server: # surgelee github仓库问题无法连接
-#        git:
-#          # 单独创建一个从仓库保存配置信息
-#          uri: git@github.com:surgelee/SpringCloud-L-Config.git
-#          #搜索目录
-#          search-paths:
-#            - springcloud-config
-#          username:
-#          password:
-#      #启动成功后访问的路径 http://ip:3344/{label}/{application}-{profile}.yml 能访问的配置文件 就表示成功了
-#      label: main #读取分支
         git:
-          uri: https://gitee.com/lixiaogou/sprincloud-config.git #GitHub上面的git仓库名字
-          search-paths: #搜索目录
+          # 单独创建一个从仓库保存配置信息
+          uri: https://github.com/surgelee/SpringCloud-L-Config.git # git@github.com:surgelee/SpringCloud-L-Config.git
+          #搜索目录
+          search-paths:
             - springcloud-config
-          label: master #读取分支
+          username: 18811088086@163.com
+          password: lbt19880428
+      #启动成功后访问的路径 http://ip:3344/{label}/{application}-{profile}.yml 能访问的配置文件 就表示成功了
+      label: main #读取分支
+
+#        git:
+#          uri: https://gitee.com/lixiaogou/sprincloud-config.git #GitHub上面的git仓库名字
+#          search-paths: #搜索目录
+#            - springcloud-config
+#          label: master #读取分支
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 eureka:
   client:
     service-url:
       defaultZone:  http://localhost:7001/eureka
+
+##rabbitmq相关配置,暴露bus刷新配置的端点 SpringCloud Bus动态刷新全局广播
+management:
+  endpoints: #暴露bus刷新配置的端点
+    web:
+      exposure:
+        include: 'bus-refresh'
+
+#rabbitmq相关配置 15672是Web管理界面的端口；5672是MQ访问的端口
+#rabbitmq:
+#  host: localhost
+#  port: 5672
+#  username: guest
+#  password: guest
